@@ -8,6 +8,7 @@ struct Round {
     blue: u32,
 }
 
+#[allow(dead_code, unused_variables)]
 struct Game {
     id: u32,
     rounds: Vec<Round>,
