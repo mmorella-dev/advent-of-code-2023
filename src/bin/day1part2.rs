@@ -9,7 +9,7 @@ const NUMBER_WORDS: &[&str] = &[
     "zero", "one", "two", "three", "four", "five", "six", "seven", "eight", "nine",
 ];
 
-/// A lookup table which maps words (e.g. "zero") and numbers (e.g. "0") to an integer
+/// lookup table maps words (e.g. "zero") and numbers (e.g. "0") to integers
 static NUMBER_MAP: Lazy<HashMap<String, i32>> = Lazy::new(|| {
     let mut map = HashMap::with_capacity(20);
     for (x, i) in NUMBER_WORDS.iter().zip(0..) {
@@ -28,23 +28,24 @@ fn parse_input(input: &str) -> i32 {
 }
 
 fn parse_line(line: &str) -> i32 {
-    // compiles the regex "0|1|2|..|9|one|two|three|four|..|nine"
+    // regex which matches any number word or digit
     static REGEX: Lazy<Regex> = Lazy::new(|| {
         Regex::new(&NUMBER_MAP.keys().join("|"))
         .unwrap()
     });
-
-    let mut matches = vec![];
+    // iterate and match words
+    let mut first = None;
+    let mut last = None;
     let mut idx = 0;
-    while let Some(m) = REGEX.find_at(line, idx) {
+    while let Some(matched) = REGEX.find_at(line, idx) {
+        first = first.or(Some(matched.as_str()));
+        last = Some(matched.as_str());
         // allow overlapping matches inside words, e.g. eightwo
-        idx = m.range().start + 1;
-        matches.push(m.as_str());
+        idx = matched.range().start + 1;
     }
-
-    let first_digit = parse_digit(matches[0]).unwrap();
-    let last_digit = parse_digit(matches.iter().last().unwrap()).unwrap();
-
+    // parse matched words into
+    let first_digit = parse_digit(first.unwrap()).unwrap();
+    let last_digit = parse_digit(last.unwrap()).unwrap();
     return first_digit * 10 + last_digit;
 }
 

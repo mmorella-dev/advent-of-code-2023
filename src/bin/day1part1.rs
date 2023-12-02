@@ -7,11 +7,9 @@ fn parse_input(input: &str) -> i32 {
 }
 
 fn parse_line(l: &str) -> i32 {
-    let first = l.chars().find(|c| c.is_ascii() && c.is_numeric()).unwrap();
-    let last = l
-        .chars()
-        .rfind(|c| c.is_ascii() && c.is_numeric())
-        .unwrap();
+    let mut iter = l.chars().filter(|c| c.is_ascii_digit()).peekable();
+    let first = *iter.peek().unwrap();
+    let last = iter.last().unwrap();
     let s: String = (vec![first, last]).into_iter().collect();
     s.parse().unwrap()
 }
