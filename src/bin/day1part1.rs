@@ -10,8 +10,7 @@ fn parse_line(l: &str) -> i32 {
     let first = l.chars().find(|c| c.is_ascii() && c.is_numeric()).unwrap();
     let last = l
         .chars()
-        .rev()
-        .find(|c| c.is_ascii() && c.is_numeric())
+        .rfind(|c| c.is_ascii() && c.is_numeric())
         .unwrap();
     let s: String = (vec![first, last]).into_iter().collect();
     s.parse().unwrap()
