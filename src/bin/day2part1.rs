@@ -1,19 +1,19 @@
 use std::fs;
 
-const MAX_RED: usize = 12;
-const MAX_GREEN: usize = 13;
-const MAX_BLUE: usize = 14;
+const MAX_RED: u32 = 12;
+const MAX_GREEN: u32 = 13;
+const MAX_BLUE: u32 = 14;
 
 const INPUT_FILE: &str = "./inputs/day2.txt";
 
 struct Round {
-    red: usize,
-    green: usize,
-    blue: usize,
+    red: u32,
+    green: u32,
+    blue: u32,
 }
 
 struct Game {
-    id: usize,
+    id: u32,
     rounds: Vec<Round>,
 }
 
@@ -32,7 +32,7 @@ fn parse_round(r: &str) -> Round {
     let mut green = 0;
     for pile in r.split(',') {
         let (amount, color) = pile.trim().split_once(' ').unwrap();
-        let amount: usize = amount.trim().parse().unwrap();
+        let amount: u32 = amount.trim().parse().unwrap();
         match color.trim() {
             "red" => red = amount,
             "blue" => blue = amount,
@@ -43,7 +43,7 @@ fn parse_round(r: &str) -> Round {
     return Round { red, green, blue };
 }
 
-fn parse_game_id(l: &str) -> usize {
+fn parse_game_id(l: &str) -> u32 {
     let (_, i) = l.rsplit_once(' ').unwrap();
     i.parse().unwrap()
 }
@@ -55,7 +55,7 @@ fn parse_line(l: &str) -> Game {
     Game { id, rounds }
 }
 
-fn parse_input(input: &str) -> usize {
+fn parse_input(input: &str) -> u32 {
     input.lines().map(parse_line).filter(|g| game_legal(g)).map(|g| g.id).sum()
 }
 

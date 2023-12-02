@@ -3,13 +3,13 @@ use std::fs;
 const INPUT_FILE: &str = "./inputs/day2.txt";
 
 struct Round {
-    red: usize,
-    green: usize,
-    blue: usize,
+    red: u32,
+    green: u32,
+    blue: u32,
 }
 
 struct Game {
-    id: usize,
+    id: u32,
     rounds: Vec<Round>,
 }
 
@@ -23,7 +23,7 @@ fn min_cubes_necessary(game: Game) -> Round {
     most
 }
 
-fn power_of_set(r: Round) -> usize {
+fn power_of_set(r: Round) -> u32 {
     let Round {red, green, blue} = r;
     red * green * blue
 }
@@ -34,7 +34,7 @@ fn parse_round(r: &str) -> Round {
     let mut green = 0;
     for pile in r.split(',') {
         let (amount, color) = pile.trim().split_once(' ').unwrap();
-        let amount: usize = amount.trim().parse().unwrap();
+        let amount: u32 = amount.trim().parse().unwrap();
         match color.trim() {
             "red" => red = amount,
             "blue" => blue = amount,
@@ -45,7 +45,7 @@ fn parse_round(r: &str) -> Round {
     return Round { red, green, blue };
 }
 
-fn parse_game_id(l: &str) -> usize {
+fn parse_game_id(l: &str) -> u32 {
     let (_, i) = l.rsplit_once(' ').unwrap();
     i.parse().unwrap()
 }
@@ -57,7 +57,7 @@ fn parse_line(l: &str) -> Game {
     Game { id, rounds }
 }
 
-fn parse_input(input: &str) -> usize {
+fn parse_input(input: &str) -> u32 {
     input.lines().map(parse_line).map(min_cubes_necessary).map(power_of_set).sum()
 }
 
