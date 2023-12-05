@@ -23,7 +23,6 @@ fn parse_input(input: &str) -> Vec<&str> {
 }
 
 fn get_solution(s: &[&str]) -> u32 {
-    let mut sum = 0;
     // for each row...
     s.iter().enumerate().map(|(i, row)| {
         // split into groups of digits and non-digits
