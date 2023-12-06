@@ -1,9 +1,7 @@
 use itertools::Itertools;
-use std::{
-    collections::{BTreeMap, BTreeSet},
-    fs,
-    ops::Range, borrow::BorrowMut,
-};
+use std::fs;
+use std::ops::Range;
+use std::collections::BTreeSet;
 
 fn main() {
     let input = fs::read_to_string("inputs/day5.txt").unwrap();
@@ -71,7 +69,6 @@ fn parse_map(line: &str) -> Map {
 }
 
 fn get_solution(seed_ranges: &Vec<SeedRange>, map_layers: &Vec<MapLayer>) -> i64 {
-    use std::iter::once;
     let max_location = map_layers
         .iter()
         .flat_map(|l| l.iter())

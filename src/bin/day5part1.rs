@@ -1,10 +1,9 @@
 use itertools::Itertools;
-use std::{fs, ops::{Range, Add}};
+use std::fs;
+use std::ops::Range;
 
-const SAMPLE_FILE: &str = "./inputs/day5_sample.txt";
-const INPUT_FILE: &str = "./inputs/day5.txt";
 fn main() {
-    let input = fs::read_to_string(INPUT_FILE).unwrap();
+    let input = fs::read_to_string("./inputs/day5.txt").unwrap();
     let (seeds, maps) = parse_input(&input);
     let solution = get_solution(&seeds, &maps);
     println!("{}", solution);
@@ -12,14 +11,14 @@ fn main() {
 
 #[test]
 fn test_main() {
-    let input = fs::read_to_string(INPUT_FILE).unwrap();
+    let input = fs::read_to_string("./inputs/day5.txt").unwrap();
     let (seeds, maps) = parse_input(&input);
     let solution = get_solution(&seeds, &maps);
     assert_eq!(solution, 3374647);
 }
 #[test]
 fn test_sample() {
-    let input = fs::read_to_string(SAMPLE_FILE).unwrap();
+    let input = fs::read_to_string("./inputs/day5_sample.txt").unwrap();
     let (seeds, maps) = parse_input(&input);
     let solution = get_solution(&seeds, &maps);
     assert_eq!(solution, 35);
