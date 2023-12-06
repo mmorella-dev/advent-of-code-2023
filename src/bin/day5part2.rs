@@ -69,13 +69,6 @@ fn parse_map(line: &str) -> Map {
 }
 
 fn get_solution(seed_ranges: &Vec<SeedRange>, map_layers: &Vec<MapLayer>) -> i64 {
-    let max_location = map_layers
-        .iter()
-        .flat_map(|l| l.iter())
-        .map(|m| m.range.end)
-        .max()
-        .unwrap();
-    println!("max loc: {}", max_location);
     // get all the locations where the seed value is discontiguous
     let deltas = get_deltas(map_layers, seed_ranges);
     // check each location
@@ -108,18 +101,7 @@ fn get_deltas(map_layers: &Vec<Vec<Map>>, seed_ranges: &Vec<Range<i64>>) -> BTre
         // add all the range bounds in this layer...
         deltas.extend(layer.iter().flat_map(|m| once(m.range.start).chain(once(m.range.end - 1))).map(|d| d as i64))
     }
-
     deltas
-
-    // let map_edges = map_layers
-    //     .iter()
-    //     .flat_map(|l| l.iter())
-    //     ;
-    // let seed_edges = seed_ranges
-    //     .iter()
-    //     .flat_map(|r| once(r.start).chain(once(r.end)));
-    // let deltas: BTreeSet<_> = map_edges.chain(seed_edges).collect();
-    // deltas
 }
 
 fn get_seed_location(map_layers: &Vec<MapLayer>, seed: i64) -> i64 {
