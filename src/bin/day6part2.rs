@@ -12,14 +12,14 @@ fn main() {
 fn test_main() {
     let input = fs::read_to_string("inputs/day6.txt").unwrap();
     let parsed = parse_input(&input);
-    assert_eq!(get_solution(&parsed), 608902);
+    assert_eq!(get_solution(&parsed), 46173809);
 }
 #[test]
 fn test_sample() {
     let input = "Time:      7  15   30
     Distance:  9  40  200";
     let parsed = parse_input(&input);
-    assert_eq!(get_solution(&parsed), 288);
+    assert_eq!(get_solution(&parsed), 71503);
 }
 
 struct Race {
