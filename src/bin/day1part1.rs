@@ -1,27 +1,29 @@
 use std::fs;
 
-const INPUT_FILE: &str = "./inputs/day1.txt";
-
-fn parse_input(input: &str) -> i32 {
-    input.lines().map(parse_line).sum()
-}
-
-fn parse_line(l: &str) -> i32 {
-    let mut iter = l.chars().filter(|c| c.is_ascii_digit()).peekable();
-    let first = *iter.peek().unwrap();
-    let last = iter.last().unwrap();
-    let s: String = (vec![first, last]).into_iter().collect();
-    s.parse().unwrap()
-}
-
 fn main() -> std::io::Result<()> {
-    let input = fs::read_to_string(INPUT_FILE)?;
-    println!("{}", parse_input(&input));
+    let input = fs::read_to_string("./inputs/day1.txt")?;
+    println!("{}", get_solution(&input));
     Ok(())
 }
 
 #[test]
 fn test_main() {
-    let input = fs::read_to_string(INPUT_FILE).unwrap();
-    assert_eq!(parse_input(&input), 54388);
+    let input = fs::read_to_string("./inputs/day1.txt").unwrap();
+    assert_eq!(get_solution(&input), 54388);
+}
+
+/// given the input string, return the sum of each line
+fn get_solution(input: &str) -> u32 {
+    input.lines().map(parse_line).sum()
+}
+
+/// get the first and last digit in a line and return a 2 digit number.
+fn parse_line(l: &str) -> u32 {
+    // get all the digits in the line...
+    let mut iter = l.chars().filter_map(|c| c.to_digit(10)).peekable();
+    // take the first and last (might be the same digit!)
+    let first = *iter.peek().unwrap();
+    let last = iter.last().unwrap();
+    // calculate.
+    first * 10 + last
 }
