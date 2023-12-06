@@ -26,29 +26,41 @@ fn test_sample() {
 
 struct Map {
     range: Range<u64>, // which seeds to add
-    offset: i64, // the amount to add or subtract to the location to get to the destination
+    offset: i64,       // the amount to add or subtract to the location to get to the destination
 }
-// a set of maps for a particular layer, e.g. 
+// a set of maps for a particular layer, e.g.
 type MapLayer = Vec<Map>;
 
 /// returns all maps, sorted from lowest to highest layer
 fn parse_input(input: &str) -> (Vec<u64>, Vec<MapLayer>) {
     let mut groups = input.split("\n\n").map(|l| l.lines());
     // first line: "seeds: x x x x x"
-    let seeds: Vec<_> = groups.next().unwrap().next().unwrap().strip_prefix("seeds: ").unwrap().split(" ").map(|s| s.parse().unwrap()).collect();
+    let seeds: Vec<_> = groups
+        .next()
+        .unwrap()
+        .next()
+        .unwrap()
+        .strip_prefix("seeds: ")
+        .unwrap()
+        .split(" ")
+        .map(|s| s.parse().unwrap())
+        .collect();
 
-    let map_layers = groups.map(|mut it| {
-        it.next(); // eat header
-        it.map(|line| parse_map(line))
-        .collect::<MapLayer>()
-    }).collect_vec();
+    let map_layers = groups
+        .map(|mut it| {
+            it.next(); // eat header
+            it.map(|line| parse_map(line)).collect::<MapLayer>()
+        })
+        .collect_vec();
 
     (seeds, map_layers)
 }
 
-
 fn parse_map(line: &str) -> Map {
-    let nums = line.split(' ').map(|n| n.parse::<u64>().unwrap()).collect_vec();
+    let nums = line
+        .split(' ')
+        .map(|n| n.parse::<u64>().unwrap())
+        .collect_vec();
     if let [dst, src, len] = nums[..] {
         return Map {
             range: src..(src + len),
@@ -59,10 +71,12 @@ fn parse_map(line: &str) -> Map {
 }
 
 fn get_solution(seeds: &Vec<u64>, map_layers: &Vec<MapLayer>) -> u64 {
-    seeds.iter()
-    // .inspect(|seed| println!("{}", seed))
-    .map(|&seed| get_seed_location(map_layers, seed))
-    .min().unwrap()
+    seeds
+        .iter()
+        // .inspect(|seed| println!("{}", seed))
+        .map(|&seed| get_seed_location(map_layers, seed))
+        .min()
+        .unwrap()
 }
 fn get_seed_location(map_layers: &Vec<MapLayer>, seed: u64) -> u64 {
     let mut location = seed;
