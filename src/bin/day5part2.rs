@@ -2,7 +2,7 @@ use itertools::Itertools;
 use std::{
     collections::{BTreeMap, BTreeSet},
     fs,
-    ops::Range,
+    ops::Range, borrow::BorrowMut,
 };
 
 fn main() {
@@ -28,7 +28,7 @@ struct Map {
 // a set of maps for a particular layer, e.g.
 type MapLayer = Vec<Map>;
 
-type SeedRange = Range<u64>;
+type SeedRange = Range<i64>;
 
 /// returns all maps, sorted from lowest to highest layer
 fn parse_input(input: &str) -> (Vec<SeedRange>, Vec<MapLayer>) {
@@ -70,7 +70,7 @@ fn parse_map(line: &str) -> Map {
     panic!();
 }
 
-fn get_solution(seed_ranges: &Vec<SeedRange>, map_layers: &Vec<MapLayer>) -> u64 {
+fn get_solution(seed_ranges: &Vec<SeedRange>, map_layers: &Vec<MapLayer>) -> i64 {
     use std::iter::once;
     let max_location = map_layers
         .iter()
@@ -79,11 +79,9 @@ fn get_solution(seed_ranges: &Vec<SeedRange>, map_layers: &Vec<MapLayer>) -> u64
         .max()
         .unwrap();
     println!("max loc: {}", max_location);
-    let deltas: BTreeSet<_> = map_layers
-        .iter()
-        .flat_map(|l| l.iter())
-        .flat_map(|m| once(m.range.start).chain(once(m.range.end)))
-        .collect();
+    // get all the locations where the seed value is discontiguous
+    let deltas = get_deltas(map_layers, seed_ranges);
+    // check each location
     deltas
         .iter()
         .filter(|i| seed_ranges.iter().any(|r| r.contains(&i)))
@@ -92,12 +90,47 @@ fn get_solution(seed_ranges: &Vec<SeedRange>, map_layers: &Vec<MapLayer>) -> u64
         .unwrap()
 }
 
-fn get_seed_location(map_layers: &Vec<MapLayer>, seed: u64) -> u64 {
+fn get_deltas(map_layers: &Vec<Vec<Map>>, seed_ranges: &Vec<Range<i64>>) -> BTreeSet<i64> {
+    use std::iter::once;
+
+    let mut deltas = BTreeSet::<i64>::new();
+
+    // include seed starts and ends, just in case.
+    for range in seed_ranges {
+        deltas.insert(range.start);
+        deltas.insert(range.end);
+    }
+    // 
+    for layer in map_layers {
+        // for all existing elements, offset them by the values in this layer.
+        for d in deltas.clone() {
+            if let Some(map) = layer.iter().find(|m| m.range.contains(&d)) {
+                deltas.insert(d + map.offset);
+            }
+        }
+        // add all the range bounds in this layer...
+        deltas.extend(layer.iter().flat_map(|m| once(m.range.start).chain(once(m.range.end - 1))).map(|d| d as i64))
+    }
+
+    deltas
+
+    // let map_edges = map_layers
+    //     .iter()
+    //     .flat_map(|l| l.iter())
+    //     ;
+    // let seed_edges = seed_ranges
+    //     .iter()
+    //     .flat_map(|r| once(r.start).chain(once(r.end)));
+    // let deltas: BTreeSet<_> = map_edges.chain(seed_edges).collect();
+    // deltas
+}
+
+fn get_seed_location(map_layers: &Vec<MapLayer>, seed: i64) -> i64 {
     let mut location = seed;
     for layer in map_layers {
         for map in layer {
             if map.range.contains(&location) {
-                location = (location as i64 + map.offset) as u64;
+                location = (location as i64 + map.offset) as i64;
                 break;
             }
         }
