@@ -9,6 +9,21 @@ fn main() {
     println!("{}", solution);
 }
 
+#[test]
+fn test_main() {
+    let input = fs::read_to_string("inputs/day7.txt").unwrap();
+    let parsed = parse_input(&input);
+    let solution = get_solution(parsed);
+    assert_eq!(solution, 251121738);
+}
+#[test]
+fn test_sample() {
+    let input = fs::read_to_string("inputs/day7_sample.txt").unwrap();
+    let parsed = parse_input(&input);
+    let solution = get_solution(parsed);
+    assert_eq!(solution, 6440);
+}
+
 #[derive(PartialOrd, Ord, PartialEq, Eq)]
 struct Rank(u8);
 
